@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useContext, useLayoutEffect, useRef } from 'react';
 import { requestNum } from 'request-animation-number';
 import { Ctx, minMax } from './App';
 
