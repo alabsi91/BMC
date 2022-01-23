@@ -1,0 +1,34 @@
+:root {
+  --main-color: #d62965;
+  --page-background: #0f0c1d;
+
+  --header-background: #221b44;
+
+  --buttons-background: #0e0c1d;
+  --buttons-background-hover: #120f0f;
+  --buttons-text-color-active: #ffffff;
+
+  --inputs-border-hover: #47475c;
+  --inputs-background-active: #050715;
+
+  --text-color: #ffffff;
+  --text-results-color: #a8d400;
+
+  --cards-background: #0e122f;
+  --cards-header-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
+  --cards-info-background: #050715;
+}
+.header-title {
+  background: conic-gradient(
+    from -90deg at var(--title-color-Pos) 100%,
+    #d62965,
+    #ff0066,
+    #ff00cc,
+    #cc00ff,
+    #6600ff,
+    #0000ff,
+    #0000ff,
+    #0000ff,
+    #3737ff
+  );
+}

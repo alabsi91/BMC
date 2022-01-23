@@ -1,0 +1,6 @@
+<svg width="200" height="200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<filter id='filter'>
+<feGaussianBlur stdDeviation="5"/>
+</filter>
+<circle cx="50%" cy="50%" r="25%" fill="white" filter="url(#filter)"/>
+</svg>

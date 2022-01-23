@@ -1,0 +1,24 @@
+
+:root {
+  --main-color: #fc6e83;
+
+  --page-background: #232025;
+  --header-background: #413b44;
+
+  --buttons-background: #302b31;
+  --buttons-background-hover: #120f0f;
+  --buttons-text-color-active: #252126;
+
+  --inputs-border-hover: #5e5e60;
+  --inputs-background-active: #120f0f;
+
+  --text-color: #d5cdc4;
+  --text-results-color: #ffbc42;
+
+  --cards-background: #2f2b31;
+  --cards-header-shadow: 0px 1px 7px 1px rgba(0, 0, 0, 0.3);
+  --cards-info-background: #120f0f;
+}
+.header-title {
+  background: conic-gradient(at var(--title-color-Pos) 50%, #fc6e83, #ffbc42, #fc6e83, #b78cf7);
+}
