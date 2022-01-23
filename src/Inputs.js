@@ -71,13 +71,25 @@ export default function Inputs(props) {
     }
   };
 
-  const changeTheme = e => {
+  const changeTheme = async e => {
     const tag = document.getElementById('currentTheme');
+    const themeColor = document.getElementById('theme-color');
+    const manifestBgColor = document.getElementById('background_color');
     const theme = e.target.dataset.theme;
+
     tag.setAttribute('href', `/themes/${theme}.css`);
     setSelectedTheme(theme);
+    await new Promise(resolve => setTimeout(resolve, 50));
+    // for manifest
+    const colorMain = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim();
+    const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--page-background').trim();
+    themeColor.setAttribute('content', colorMain);
+    manifestBgColor.setAttribute('content', backgroundColor);
+    // save theme to localStorage
     window.localStorage.setItem('theme', theme);
+    // close theme dialog
     toggleThemeDialog();
+    // dynamic icon color
     drawCanvas();
   };
 

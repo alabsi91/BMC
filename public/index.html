@@ -2,14 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" id='appIcon' href="%PUBLIC_URL%/favicon.png" />
+    <link rel="icon" id="appIcon" href="%PUBLIC_URL%/favicon.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Web site created using create-react-app" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta name="theme-color" id="theme-color" content="red" />
+    <meta name="background_color" id="background_color" content="var(--page-background)" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link type="text/css" rel="stylesheet" id="currentTheme" href="themes/fledgling.css" />
-    <title>React App</title>
+    <meta name="description" content="Body Measurements Calculator" />
+    <meta name="author" content="Ahmed Alabsi">
+    <title>BMC</title>
+
     <script>
       const tag = document.getElementById('currentTheme');
       const theme = window.localStorage.getItem('theme');

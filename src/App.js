@@ -106,38 +106,47 @@ function App() {
   };
 
   useEffect(() => {
-    setAppIcon();
-    
+    setTheme();
+
     window.addEventListener('scroll', scrollFunction);
-    
+
     const resizeObserver = new ResizeObserver(masonryLayout);
     const headerObserver = new ResizeObserver(stickyTopValue);
-    
+
     resizeObserver.observe(document.getElementById('cards-grid'));
     headerObserver.observe(document.getElementById('header'));
-    
+
     document.querySelectorAll('.card-container').forEach(card => {
       resizeObserver.observe(card);
       if (!matchMedia('(pointer:fine)').matches) return; // disable mouse events on touch devices
       card.addEventListener('mousemove', e => cardMouseMove(e, card));
       card.addEventListener('mouseenter', e => cardMouseEnter(e, card));
       card.addEventListener('mouseleave', e => cardMouseLeave(e, card));
-      
+
       card.addEventListener('dragstart', onDragStart, false);
       card.addEventListener('dragend', onDragEnd, false);
       card.addEventListener('dragover', onDragOver, false);
     });
-    
+
     animateCardsBorders();
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  const setAppIcon = () => {
+
+  const setTheme = () => {
+    // color transition when changing theme.
     document.documentElement.style.setProperty('--color-transition', 'background-color 0.3s ease-in-out');
+    // dynamic icon color
     const iconTag = document.getElementById('appIcon');
     const icon = window.localStorage.getItem('appIcon');
     iconTag.setAttribute('href', icon);
+    // for manifest
+    const themeColor = document.getElementById('theme-color');
+    const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--page-background').trim();
+    const colorMain = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim();
+    const manifestBgColor = document.getElementById('background_color');
+    themeColor.setAttribute('content', colorMain);
+    manifestBgColor.setAttribute('content', backgroundColor);
   };
 
   const onDragStart = e => {
@@ -246,12 +255,12 @@ function App() {
     const grid = gridItems[0].parentElement;
     const gridGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
     const columnCount = window.getComputedStyle(grid).getPropertyValue('grid-template-columns').split(' ').length;
-    
+
     // remove margins from grid items to reset
     for (let i = 0; i < gridItems.length; i++) gridItems[i].style.removeProperty('margin-top');
-    
+
     if (columnCount === 1) return;
-    
+
     // set ma rgin-top of each row
     for (let i = 0; i < gridItems.length; i++) {
       if (gridItems[i + columnCount]) {

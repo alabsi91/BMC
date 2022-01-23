@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import { requestNum } from 'request-animation-number';
 import { Ctx, minMax } from './App';
 
@@ -17,7 +17,7 @@ export default function UnlockCard(props) {
     const card = locked.parentElement;
     const cardHeight = card.querySelector('.card-contents').clientHeight;
 
-    if (locked.getCss('display') === 'none') return; // exit if card is already unlocked
+    if (locked.getCss('display') === 'none' && !skipAnimation) return; // exit if card is already unlocked
 
     const lockedHeight = locked.clientHeight;
 
@@ -39,7 +39,7 @@ export default function UnlockCard(props) {
     const locked = cardUnlockContent.current;
     const card = locked.parentElement;
     const cardHeight = card.querySelector('.card-contents').clientHeight;
-    if (locked.getCss('display') === 'block') return; // exit if card is already locked
+    if (locked.getCss('display') === 'block' && !skipAnimation) return; // exit if card is already locked
 
     locked.css({ display: 'block', clipPath: 'circle(0%)' });
     const children = locked.children;
@@ -63,11 +63,9 @@ export default function UnlockCard(props) {
   }, []);
 
   const UnlockCard = useCallback(
-    async skipAnimation => {
+    skipAnimation => {
       const container = cardUnlockContent.current;
       const card = container.parentElement;
-
-      if (skipAnimation) await new Promise(resolve => setTimeout(resolve, 100));
 
       let isUnlocked = 0;
       props.dependencies.forEach(dependency => {
@@ -92,10 +90,16 @@ export default function UnlockCard(props) {
     [ctx.data, props.dependencies]
   );
 
-  useEffect(() => {
+  const loadCard = useCallback(async() => {
+    await new Promise(resolve => setTimeout(resolve, 150));
+    UnlockCard(true);
+  }, [UnlockCard]);
+
+  useLayoutEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       UnlockCard(true);
+      loadCard();
       return;
     }
     UnlockCard();

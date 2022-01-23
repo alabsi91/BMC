@@ -1,5 +1,5 @@
 :root {
-  --main-color: #00c6cf;
+  --main-color: #00c6cf !important;
   --page-background: #e8e8e8;
 
   --header-background: #e8e8e8;
