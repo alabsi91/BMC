@@ -47,16 +47,6 @@ export const minMax = {
   },
 };
 
-// const xhr = new XMLHttpRequest();
-// xhr.open('POST', 'https://api.netlify.com/build_hooks/61eedb9ee87d6b409bed3ca4', true);
-// xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-// xhr.onreadystatechange = function() { // Call a function when the state changes.
-//     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-            // console.log('success');
-//     }
-// }
-// xhr.send();
-
 let userData = {
   gender: 'male', // female
   age: 0,
