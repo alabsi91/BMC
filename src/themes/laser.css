@@ -1,4 +1,4 @@
-:root {
+[data-current-theme='laser'] {
   --main-color: #d62965;
   --page-background: #0f0c1d;
 
@@ -18,7 +18,7 @@
   --cards-header-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.3);
   --cards-info-background: #050715;
 }
-.header-title {
+[data-current-theme='laser'] .header-title {
   background: conic-gradient(
     from -90deg at var(--title-color-Pos) 100%,
     #d62965,

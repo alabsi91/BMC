@@ -5,22 +5,18 @@
     <link rel="icon" id="appIcon" href="%PUBLIC_URL%/favicon.png" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" id="theme-color" content="#fc6e83" />
-    <meta name="background_color" id="background_color" content="#232025" />
+    <meta name="theme-color" id="theme-color" content="#413b44" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link type="text/css" rel="stylesheet" id="currentTheme" href="themes/fledgling.css" />
     <meta name="description" content="Body Measurements Calculator" />
-    <meta name="author" content="Ahmed Alabsi">
+    <meta name="author" content="Ahmed Alabsi" />
     <title>BMC</title>
-
-    <script>
-      const tag = document.getElementById('currentTheme');
-      const theme = window.localStorage.getItem('theme');
-      if (theme) tag.setAttribute('href', `/themes/${theme}.css`);
-    </script>
   </head>
-  <body>
+  <body data-current-theme="fledgling">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
+  <script>
+    const theme = localStorage.getItem('theme');
+    if (theme) document.body.dataset.currentTheme = theme;
+  </script>
 </html>

@@ -1,4 +1,4 @@
-:root {
+[data-current-theme='oneUi'] {
   --main-color: #7bb5f6;
 
   --page-background: #f6f6f6;
@@ -20,6 +20,6 @@
 
   --cards-info-background: #ffffff;
 }
-.header-title {
+[data-current-theme='oneUi'] .header-title {
   background: conic-gradient(at var(--title-color-Pos) 30%, #a698fc, #7bb5f6, #187888);
 }

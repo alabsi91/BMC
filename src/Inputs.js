@@ -71,20 +71,14 @@ export default function Inputs(props) {
     }
   };
 
-  const changeTheme = async e => {
-    const tag = document.getElementById('currentTheme');
+  const changeTheme = e => {
     const themeColor = document.getElementById('theme-color');
-    const manifestBgColor = document.getElementById('background_color');
     const theme = e.target.dataset.theme;
-
-    tag.setAttribute('href', `/themes/${theme}.css`);
+    document.body.dataset.currentTheme = theme;
     setSelectedTheme(theme);
-    await new Promise(resolve => setTimeout(resolve, 50));
     // for manifest
-    const colorMain = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim();
-    const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--page-background').trim();
+    const colorMain = getComputedStyle(document.body).getPropertyValue('--header-background').trim();
     themeColor.setAttribute('content', colorMain);
-    manifestBgColor.setAttribute('content', backgroundColor);
     // save theme to localStorage
     window.localStorage.setItem('theme', theme);
     // close theme dialog
@@ -97,8 +91,8 @@ export default function Inputs(props) {
     const canvas = document.createElement('canvas');
     const iconTag = document.getElementById('appIcon');
     const ctx = canvas.getContext('2d');
-    const colorMain = getComputedStyle(document.documentElement).getPropertyValue('--main-color');
-    const colorBg = getComputedStyle(document.documentElement).getPropertyValue('--cards-background');
+    const colorMain = getComputedStyle(document.body).getPropertyValue('--main-color');
+    const colorBg = getComputedStyle(document.body).getPropertyValue('--cards-background');
 
     const [width, height] = [512, 512];
     canvas.width = width;
@@ -139,14 +133,12 @@ export default function Inputs(props) {
   };
 
   const itemMouseEnter = e => {
-    const tag = document.getElementById('currentTheme');
     const theme = e.target.dataset.theme;
-    tag.setAttribute('href', `/themes/${theme}.css`);
+    document.body.dataset.currentTheme = theme;
   };
 
   const itemMouseLeave = () => {
-    const tag = document.getElementById('currentTheme');
-    tag.setAttribute('href', `/themes/${selectedTheme}.css`);
+    document.body.dataset.currentTheme = selectedTheme;
   };
 
   return (

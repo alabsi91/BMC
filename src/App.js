@@ -11,6 +11,10 @@ import Whtr from './Whtr';
 import { cardMouseMove, cardMouseEnter, cardMouseLeave } from './cardMouseMove';
 import { requestNum } from 'request-animation-number';
 
+// import all css files
+const themes = ['twitch', 'oneUi', 'laser', 'fledgling', 'neumorphism'];
+themes.forEach(theme => require(`./themes/${theme}.css`));
+
 initializeEasyCss();
 
 export const ACTIVITY = {
@@ -142,11 +146,8 @@ function App() {
     iconTag.setAttribute('href', icon);
     // for manifest
     const themeColor = document.getElementById('theme-color');
-    const backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--page-background').trim();
-    const colorMain = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim();
-    const manifestBgColor = document.getElementById('background_color');
+    const colorMain = getComputedStyle(document.body).getPropertyValue('--header-background').trim();
     themeColor.setAttribute('content', colorMain);
-    manifestBgColor.setAttribute('content', backgroundColor);
   };
 
   const onDragStart = e => {

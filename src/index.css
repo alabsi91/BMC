@@ -54,7 +54,7 @@ header {
   margin: 0;
   margin-left: 20px;
   line-height: 1;
-  background-clip: text;
+  background-clip: text !important;
   -webkit-text-fill-color: transparent;
   cursor: pointer;
   transition: var(--color-transition);
