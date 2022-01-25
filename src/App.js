@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Bfp from './Bfp';
 import Bmi from './Bmi';
 import Bmr from './Bmr';
@@ -287,7 +287,31 @@ function App() {
     }
   };
 
-  const cards = useRef([Bmi, Bmr, Whtr, Ibw, Bfp, Lbm, Tbw]);
+  const cards = useRef({
+    Bmi,
+    Bmr,
+    Whtr,
+    Ibw,
+    Bfp,
+    Lbm,
+    Tbw,
+  });
+
+  const renderCards = useCallback(() => {
+    const arrange = window.localStorage.getItem('arrange');
+    if (arrange) {
+      const newArrange = JSON.parse(arrange).map(e => e[0].charAt(0).toUpperCase() + e.slice(1));
+      return newArrange.map(e => {
+        const Card = cards.current[e];
+        return <Card key={e} />;
+      });
+    } else {
+      return Object.keys(cards.current).map(e => {
+        const Card = cards.current[e];
+        return <Card key={Card.name} />;
+      });
+    }
+  }, []);
 
   return (
     <Ctx.Provider value={{ data, set, inputsPanle, setInputsPanle }}>
@@ -299,13 +323,7 @@ function App() {
         <Inputs />
 
         <div id='cards-grid' className='cards-wrapper'>
-          {window.localStorage.getItem('arrange')
-            ? JSON.parse(window.localStorage.getItem('arrange')).map(e => {
-                const index = cards.current.findIndex(item => item.name.toLocaleLowerCase() === e);
-                const Card = cards.current[index];
-                return <Card key={e} />;
-              })
-            : cards.current.map(Card => <Card key={Card} />)}
+          {renderCards()}
         </div>
 
         <div
