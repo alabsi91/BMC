@@ -187,7 +187,7 @@ function App() {
     e.dataTransfer.dropEffect = 'copyMove';
     const grid = document.getElementById('cards-grid');
     const items = Array.from(grid.children);
-    const targetId = e.target.dataset.cardId || e.target.parentElement.dataset.cardId;
+    const targetId = e.target.closest('.card-container').dataset.cardId;
     const currentItem = items.find(item => item.dataset.cardId === targetId);
 
     if (!currentItem) return;
@@ -267,7 +267,8 @@ function App() {
 
   const masonryLayout = () => {
     const gridItems = document.querySelectorAll('.card-container');
-    const grid = gridItems[0].parentElement;
+    const grid = gridItems?.[0]?.parentElement;
+    if (!grid) return;
     const gridGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
     const columnCount = window.getComputedStyle(grid).getPropertyValue('grid-template-columns').split(' ').length;
 
