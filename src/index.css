@@ -8,20 +8,8 @@
   --font-small: clamp(1rem, 1rem + 1vw, 1.5rem);
   --font-very-small: clamp(0.8rem, 0.8rem + 0.5vw, 1rem);
   --color-transition: background-color 0s ease-in-out;
-  /* fallback for not supported browsers */
-  --rotate-background: 90deg;
-  --title-color-Pos: 20%;
 }
-@property --title-color-Pos {
-  syntax: '<percentage>';
-  inherits: false;
-  initial-value: 0%;
-}
-@property --rotate-background {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
+
 body {
   margin: 0;
   font-family: 'Cairo', sans-serif;
@@ -392,7 +380,10 @@ header {
   }
   .Inputs-header {
     position: static;
+  }
+  #expandContainer {
     padding-top: 30px;
+    will-change: height;
   }
   header {
     box-shadow: var(--cards-header-shadow);
@@ -525,7 +516,6 @@ header {
   background-color: var(--cards-info-background);
   overflow: auto;
   overflow: overlay;
-  will-change: clip-path;
 }
 .card-info-content::-webkit-scrollbar {
   width: 3px;

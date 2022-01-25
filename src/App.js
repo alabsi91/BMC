@@ -11,9 +11,23 @@ import Whtr from './Whtr';
 import { cardMouseMove, cardMouseEnter, cardMouseLeave } from './cardMouseMove';
 import { requestNum } from 'request-animation-number';
 
-// import all css files
-const themes = ['twitch', 'oneUi', 'laser', 'fledgling', 'neumorphism'];
-themes.forEach(theme => require(`./themes/${theme}.css`));
+if ('registerProperty' in window.CSS) {
+  CSS.registerProperty({
+    name: '--title-color-Pos',
+    syntax: '<percentage>',
+    initialValue: '0%',
+    inherits: false,
+  });
+  CSS.registerProperty({
+    name: '--rotate-background',
+    syntax: '<angle>',
+    initialValue: '0deg',
+    inherits: false,
+  });
+} else {
+  document.documentElement.style.setProperty('--title-color-Pos', '50%');
+  document.documentElement.style.setProperty('--rotate-background', '90deg');
+}
 
 initializeEasyCss();
 

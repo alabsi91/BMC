@@ -1,17 +1,20 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { requestNum } from 'request-animation-number';
 import { ACTIVITY, Ctx, minMax } from './App';
+// import all css files
+const themes = ['twitch', 'oneUi', 'laser', 'fledgling', 'neumorphism'];
+themes.forEach(theme => require(`./themes/${theme}.css`));
 
 export default function Inputs(props) {
   const ctx = useContext(Ctx);
 
   const [selectedTheme, setSelectedTheme] = useState(window.localStorage.getItem('theme') || 'fledgling');
-  const themes = ['twitch', 'oneUi', 'laser', 'fledgling', 'neumorphism'];
 
   const expandHeader = useCallback(() => {
     const header = document.getElementById('header');
     const inputsWrapper = document.querySelector('.Inputs-header');
     const inputsContainer = document.getElementById('expandContainer');
+    const padding = inputsContainer.getCss('padding-top', true);
     const arrowContainer = document.querySelector('.input-expand-container');
     const arrow = document.getElementById('expand-arrow');
     const gridContainer = document.querySelector('.Inputs-grid-container');
@@ -22,14 +25,15 @@ export default function Inputs(props) {
       arrowContainer.css({ borderTopWidth: '1px' });
       inputsWrapper.css({ position: 'sticky' });
       header.css({ boxShadow: 'none' });
-
-      requestNum({ from: [gridHeight, 0], to: [0, 180], duration, easingFunction: 'easeInOutQuad' }, (h, r) => {
-        inputsContainer.css({ height: `${h}px` });
+      
+      requestNum({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, easingFunction: 'easeInOutQuad' }, (h, r, p) => {
+        inputsContainer.css({ height: `${h}px`, paddingTop: `${p}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
       });
       // open
     } else {
       arrowContainer.css({ borderTopWidth: '0px' });
+      inputsContainer.removeCss('padding-top');
       header.removeCss('box-shadow');
 
       requestNum(

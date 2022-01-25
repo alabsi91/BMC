@@ -20,14 +20,14 @@ export default function MethodInfo(props) {
     infoCard.css({ display: 'block', overflow: 'hidden' });
 
     const infoCardHeight = infoCard.children[1].clientHeight + infoCard.children[2].clientHeight + padding;
-    cardHeight.current = card.clientHeight ;
+    cardHeight.current = card.clientHeight;
 
     requestNum(
       {
-        from: [0, x, y, card.clientHeight ],
+        from: [0, x, y, card.clientHeight],
         to: [infoCardHeight + padding, card.clientWidth / 2, (infoCardHeight + padding) / 2, infoCardHeight],
         duration: 400,
-        easingFunction: 'easeInQuint',
+        easingFunction: 'easeOutCirc',
       },
       (c, x, y, h) => {
         card.css({ height: h + 'px' });
@@ -61,9 +61,9 @@ export default function MethodInfo(props) {
         from: [infoCardHeight, card.clientWidth / 2, card.clientHeight / 2, infoCardHeight],
         to: [0, x, y, cardHeight.current],
         duration: 500,
-        easingFunction: 'easeOutQuint',
+        easingFunction: 'easeInSine',
       },
-      async (c, x, y, h) => {
+      (c, x, y, h) => {
         infoCard.css({ clipPath: `circle(${c}px at ${x}px ${y}px)` });
         card.css({ height: h + 'px' });
 
