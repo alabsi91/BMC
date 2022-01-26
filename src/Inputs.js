@@ -2,10 +2,10 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { requestNum } from 'request-animation-number';
 import { ACTIVITY, Ctx, minMax } from './App';
 // import all css files
-const themes = ['twitch', 'oneUi', 'laser', 'fledgling', 'neumorphism'];
+import themes from './themes/themeList.json';
 themes.forEach(theme => require(`./themes/${theme}.css`));
 
-export default function Inputs(props) {
+export default function Inputs() {
   const ctx = useContext(Ctx);
 
   const [selectedTheme, setSelectedTheme] = useState(window.localStorage.getItem('theme') || 'fledgling');
@@ -19,9 +19,11 @@ export default function Inputs(props) {
     const arrow = document.getElementById('expand-arrow');
     const gridContainer = document.querySelector('.Inputs-grid-container');
     const gridHeight = gridContainer.getBoundingClientRect().height + gridContainer.getCss('margin-top', true);
+    const masks = document.querySelectorAll('.Inputs-mask');
     const duration = ctx.inputsPanle.useAnimation ? 500 : 0;
     // close
     if (!ctx.inputsPanle.isOpen) {
+      masks.removeClass('Inputs-mask-animation');
       arrowContainer.css({ borderTopWidth: '1px' });
       inputsWrapper.css({ position: 'sticky' });
       header.css({ boxShadow: 'none' });
@@ -32,6 +34,7 @@ export default function Inputs(props) {
       });
       // open
     } else {
+      masks.addClass('Inputs-mask-animation');
       arrowContainer.css({ borderTopWidth: '0px' });
       inputsContainer.removeCss('padding-top');
       header.removeCss('box-shadow');

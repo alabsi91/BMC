@@ -1,6 +1,8 @@
 type css = (styles: CSSStyleDeclaration) => void;
 type removeCss = (styles: string[] | string) => void;
 type getCss = (property: string, toNumber: boolean) => string | number;
+type addClass = (className: string) => void;
+type removeClass = (className: string) => void;
 
 declare interface HTMLElement {
   /**
@@ -20,6 +22,18 @@ declare interface HTMLElement {
    * - **Syntax:** `element.getCss( "css-property" , boolean )`
    */
   getCss: getCss;
+
+  /**
+   * - Add class name.
+   * - **Syntax:** `element.addClass( "class-name" )`
+   */
+  addClass: addClass;
+
+  /**
+   * - Remove class name.
+   * - **Syntax:** `element.removeClass( "class-name" )`
+   */
+  removeClass: removeClass;
 }
 
 declare interface Element {
@@ -40,6 +54,18 @@ declare interface Element {
    * - **Syntax:** `element.getCss( "css-property" , boolean )`
    */
   getCss: getCss;
+
+  /**
+   * - Add class name.
+   * - **Syntax:** `element.addClass( "class-name" )`
+   */
+  addClass: addClass;
+  
+  /**
+   * - Remove class name.
+   * - **Syntax:** `element.removeClass( "class-name" )`
+   */
+  removeClass: removeClass;
 }
 
 declare interface NodeList {
@@ -54,4 +80,16 @@ declare interface NodeList {
    * - **Syntax:** `element.removeCss( ["css-property", ...] | "css-property" )`
    */
   removeCss: removeCss;
+
+  /**
+   * - Add class name.
+   * - **Syntax:** `element.addClass( "class-name" )`
+   */
+  addClass: addClass;
+  
+  /**
+   * - Remove class name.
+   * - **Syntax:** `element.removeClass( "class-name" )`
+   */
+  removeClass: removeClass;
 }

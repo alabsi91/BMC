@@ -215,35 +215,29 @@ function App() {
       const card = cards[i];
       const circle = maskeElement[i];
       const { width, height } = card.getBoundingClientRect();
-
-      // eslint-disable-next-line no-loop-func
+      // top left to top right.
       requestNum({ to: width, duration }, x => {
         const maskPos = `${x - maskeSize}px ${0 - maskeSize}px`;
         circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-
-        if (x === width) {
-          requestNum({ to: height, duration }, y => {
-            const maskPos = `${x - maskeSize}px ${y - maskeSize}px`;
-            circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-
-            if (y === height) {
-              requestNum({ from: width, to: 0, duration }, xBottom => {
-                const maskPos = `${xBottom - maskeSize}px ${y - maskeSize}px`;
-                circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-
-                if (xBottom === 0) {
-                  requestNum({ from: height, to: 0, duration }, yBottom => {
-                    const maskPos = `${-maskeSize}px ${yBottom - maskeSize}px`;
-                    circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-                    if (yBottom === 0) {
-                      circle.css({ WebkitMaskPosition: 'center', maskPosition: 'center' });
-                      setInputsPanle({ isOpen: true, useAnimation: true });
-                    }
-                  });
-                }
-              });
-            }
-          });
+      });
+      // top right to bottom right.
+      requestNum({ to: height, duration, delay: duration }, y => {
+        const maskPos = `${width - maskeSize}px ${y - maskeSize}px`;
+        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
+      });
+      // bottom right to bottom left.
+      requestNum({ from: width, to: 0, duration, delay: duration * 2 }, xBottom => {
+        const maskPos = `${xBottom - maskeSize}px ${height - maskeSize}px`;
+        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
+      });
+      // bottom left to top left.
+      requestNum({ from: height, to: 0, duration, delay: duration * 3 }, yBottom => {
+        const maskPos = `${-maskeSize}px ${yBottom - maskeSize}px`;
+        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
+        if (yBottom === 0) {
+          circle.css({ WebkitMaskPosition: 'center', maskPosition: 'center' }); // reset
+          // open inputs if no user data.
+          if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true }); 
         }
       });
     }

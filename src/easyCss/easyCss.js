@@ -46,15 +46,40 @@ function getCss(prop, toNum = false) {
   }
 }
 
+function addClass(className) {
+  if (NodeList.prototype.isPrototypeOf(this)) {
+    for (let n = 0; n < this.length; n++) {
+      this[n].classList.add(className);
+    }
+  } else {
+    this.classList.add(className);
+  }
+}
+
+function removeClass(className) {
+  if (NodeList.prototype.isPrototypeOf(this)) {
+    for (let n = 0; n < this.length; n++) {
+      this[n].classList.remove(className);
+    }
+  } else {
+    this.classList.remove(className);
+  }
+}
 export default function initializeEasyCss() {
   HTMLElement.prototype.css = css;
   HTMLElement.prototype.removeCss = removeCss;
   HTMLElement.prototype.getCss = getCss;
+  HTMLElement.prototype.addClass = addClass;
+  HTMLElement.prototype.removeClass = removeClass;
 
   Element.prototype.css = css;
   Element.prototype.removeCss = removeCss;
   Element.prototype.getCss = getCss;
+  Element.prototype.addClass = addClass;
+  Element.prototype.removeClass = removeClass;
 
   NodeList.prototype.css = css;
   NodeList.prototype.removeCss = removeCss;
+  NodeList.prototype.addClass = addClass;
+  NodeList.prototype.removeClass = removeClass;
 }
