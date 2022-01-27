@@ -212,7 +212,7 @@ header {
   flex-grow: 1;
   padding: 20px;
   padding-bottom: 0;
-  margin: 10px 5px;
+  margin: 20px 5px;
   margin-top: 0;
   border-radius: var(--border-radius);
   border-color: var(--buttons-background);

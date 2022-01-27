@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Bfp from './Bfp';
-import Bmi from './Bmi';
-import Bmr from './Bmr';
 import initializeEasyCss from './easyCss/easyCss';
-import Ibw from './Ibw';
+import Bfp from './cards/Bfp';
+import Bmi from './cards/Bmi';
+import Bmr from './cards/Bmr';
+import Ibw from './cards/Ibw';
+import Lbm from './cards/Lbm';
+import Whtr from './cards/Whtr';
+import Tbw from './cards/Tbw';
 import Inputs from './Inputs';
-import Lbm from './Lbm';
-import Tbw from './Tbw';
-import Whtr from './Whtr';
 import { cardMouseMove, cardMouseEnter, cardMouseLeave } from './cardMouseMove';
 import { requestNum } from 'request-animation-number';
 

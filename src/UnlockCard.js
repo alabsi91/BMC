@@ -90,7 +90,7 @@ export default function UnlockCard(props) {
     [ctx.data, props.dependencies]
   );
 
-  const loadCard = useCallback(async() => {
+  const loadCard = useCallback(async () => {
     await new Promise(resolve => setTimeout(resolve, 150));
     UnlockCard(true);
   }, [UnlockCard]);
@@ -117,9 +117,18 @@ export default function UnlockCard(props) {
     }
   };
 
+  const expandInputs = () => {
+    if (!ctx.inputsPanle.isOpen) ctx.setInputsPanle({ isOpen: true, useAnimation: true });
+  };
+
   return (
     <>
-      <div ref={cardUnlockContent} className='card-unlock-content'>
+      <div
+        ref={cardUnlockContent}
+        className='card-unlock-content'
+        style={{ cursor: ctx.inputsPanle.isOpen ? 'unset' : 'pointer' }}
+        onClick={expandInputs}
+      >
         <h3 className='card-title card-unlock-title'>
           {props.title}
           <svg className='card-lock-icon' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
