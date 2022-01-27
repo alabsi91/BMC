@@ -108,7 +108,7 @@ export default function Inputs() {
     ctx.clearRect(0, 0, width, height); // clear canvas
 
     // draw rounded background
-    let radius = 20;
+    let radius = 100;
     const [x, y] = [0, 0];
     ctx.fillStyle = colorBg;
     if (width < 2 * radius) radius = width / 2;
@@ -180,7 +180,7 @@ export default function Inputs() {
       <div className='theme-dialog'>
         <div className='theme-dialog-background' onClick={toggleThemeDialog} />
         <div className='theme-dialog-content'>
-          {themes.map(i => (
+          {themes.sort().map(i => (
             <p
               className={'theme-dialog-itmes ' + (selectedTheme === i ? 'theme-dialog-itmes-active' : '')}
               key={i}

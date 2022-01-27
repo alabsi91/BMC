@@ -1,6 +1,6 @@
 [data-current-theme='solarized dark'] {
   --main-color: #859900;
-  --page-background: hsl(192, 100%, 5%);
+  --page-background: #00141a;
 
   --header-background: #002b36;
 
@@ -11,7 +11,7 @@
   --inputs-border-hover: #61BAAD;
   --inputs-background-active: #0d0f00;
 
-  --text-color: hsl(175, 59%, 50%);
+  --text-color: #34cbbe;
   --text-results-color: #268bd2;
 
   --cards-background: #002b36;
@@ -19,5 +19,5 @@
   --cards-info-background: #0d0f00;
 }
 [data-current-theme='solarized dark'] .header-title {
-  background: conic-gradient(from -90deg at var(--title-color-Pos) 100%, #268bd2, #859900, #268bd2, #859900)
+  background: conic-gradient(from -90deg at var(--title-color-Pos) 100%, #34cbbe, #859900, #34cbbe, #859900)
 }
