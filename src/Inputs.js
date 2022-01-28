@@ -11,7 +11,6 @@ export default function Inputs() {
   const [selectedTheme, setSelectedTheme] = useState(window.localStorage.getItem('theme') || 'fledgling');
 
   const expandHeader = useCallback(() => {
-    const header = document.getElementById('header');
     const inputsWrapper = document.querySelector('.Inputs-header');
     const inputsContainer = document.getElementById('expandContainer');
     const padding = inputsContainer.getCss('padding-top', true);
@@ -23,11 +22,9 @@ export default function Inputs() {
     const duration = ctx.inputsPanle.useAnimation ? 500 : 0;
     // close
     if (!ctx.inputsPanle.isOpen) {
-      masks.removeClass('Inputs-mask-animation');
-      arrowContainer.css({ borderTopWidth: '1px' });
-      inputsWrapper.css({ position: 'sticky' });
-      header.css({ boxShadow: 'none' });
-      
+      masks.removeClass('Inputs-mask-animation'); // remove mask animation
+      arrowContainer.css({ borderTopWidth: '1px' }); // hide border
+
       requestNum({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, easingFunction: 'easeInOutQuad' }, (h, r, p) => {
         inputsContainer.css({ height: `${h}px`, paddingTop: `${p}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
@@ -37,26 +34,39 @@ export default function Inputs() {
       masks.addClass('Inputs-mask-animation');
       arrowContainer.css({ borderTopWidth: '0px' });
       inputsContainer.removeCss('padding-top');
-      header.removeCss('box-shadow');
 
-      requestNum(
-        { from: [0, 180, window.scrollY], to: [gridHeight, 0, 0], duration, easingFunction: 'easeInOutQuad' },
-        (h, r, s) => {
-          inputsContainer.css({ height: `${h}px` });
-          arrow.css({ transform: `rotate(${r}deg)` });
-          window.scrollTo({ top: s });
-          if (r === 0) {
-            inputsContainer.removeCss('height');
-            inputsWrapper.removeCss('position');
-          }
+      requestNum({ from: [0, 180], to: [gridHeight, 0], duration, easingFunction: 'easeInOutQuad' }, (h, r) => {
+        inputsContainer.css({ height: `${h}px` });
+        arrow.css({ transform: `rotate(${r}deg)` });
+        if (r === 0) {
+          inputsContainer.removeCss('height');
+          inputsWrapper.removeCss('position');
         }
-      );
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ctx.inputsPanle]);
 
+  const expandSide = useCallback(() => {
+    const inputsContainer = document.getElementById('expandContainer');
+    const duration = ctx.inputsPanle.useAnimation ? 500 : 0;
+
+    // close
+    if (!ctx.inputsPanle.isOpen) {
+      requestNum({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, left => {
+        inputsContainer.css({ left: `${left}vw` });
+      });
+      // open
+    } else {
+      requestNum({ from: [-100], to: [0], duration, easingFunction: 'easeOutCubic' }, left => {
+        inputsContainer.css({ left: `${left}vw` });
+      });
+    }
+  }, [ctx.inputsPanle]);
+
   useEffect(() => {
-    expandHeader();
+    window.innerWidth <= 800 ? expandSide() : expandHeader();
+    document.body.style.overflow = window.innerWidth <= 800 && ctx.inputsPanle.isOpen ? 'hidden' : 'auto';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ctx.inputsPanle]);
 

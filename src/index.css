@@ -34,6 +34,16 @@ header {
   padding: 20px 0;
   padding-left: 15px;
   transition: var(--color-transition);
+  justify-content: flex-start;
+  align-items: center;
+}
+#ham-menu {
+  display: none;
+  fill: var(--main-color);
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  margin-right: 10px;
 }
 .header-title {
   display: inline-block;
@@ -185,7 +195,7 @@ header {
   background-color: var(--header-background);
   border-radius: 50%;
   box-shadow: var(--cards-header-shadow);
-  z-index: 10;
+  z-index: 3;
   cursor: pointer;
 }
 .scroll-to-top svg {
@@ -216,6 +226,19 @@ header {
   margin-top: 0;
   border-radius: var(--border-radius);
   border-color: var(--buttons-background);
+}
+.Inputs-header-close {
+  display: none;
+  flex-direction: row-reverse;
+  padding: 10px 0px;
+  margin: 20px 0px;
+}
+.Inputs-header-close > svg {
+  fill: var(--main-color);
+  height: 30px;
+  width: 30px;
+  margin-right: 20px;
+  cursor: pointer;
 }
 .Inputs-mask {
   position: absolute;
@@ -392,15 +415,33 @@ input[type='number'] {
   .Inputs-grid-container {
     grid-template-columns: repeat(1, 1fr);
   }
-  .Inputs-header {
-    position: static;
-  }
   #expandContainer {
-    padding-top: 30px;
-    will-change: height;
+    padding-top: 85px !important;
+    padding-bottom: 21px;
+    height: calc(100vh - 105px) !important;
+    width: 100vw;
+    overflow: auto !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--header-background);
+    z-index: 10;
+  }
+  .Inputs-header {
+    overflow: auto;
+  }
+  .theme-selector-container {
+    position: static;
+    transform: unset;
+  }
+  .input-expand-container > div:first-child {
+    display: none;
   }
   header {
-    box-shadow: var(--cards-header-shadow);
+    display: flex;
+  }
+  #ham-menu {
+    display: block;
   }
 }
 @media screen and (max-width: 700px) {
@@ -421,10 +462,6 @@ input[type='number'] {
     display: block;
     margin-left: 0;
     text-align: center;
-  }
-  .input-expand-container {
-    justify-content: left;
-    padding: 5px 0px;
   }
 }
 @media screen and (max-width: 450px) {

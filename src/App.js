@@ -97,6 +97,7 @@ let set = data => {
 export const Ctx = React.createContext({ data: userData, set });
 
 function App() {
+  const isPanelOpen = useRef(false);
   const [data, setData] = useState(userData);
   const [inputsPanle, setInputsPanle] = useState({ isOpen: false, useAnimation: false });
 
@@ -124,7 +125,14 @@ function App() {
   };
 
   useEffect(() => {
+    isPanelOpen.current = inputsPanle.isOpen;
+  }, [inputsPanle]);
+
+  useEffect(() => {
     setTheme();
+
+    const mediaQueryList = window.matchMedia('(max-width: 800px)');
+    mediaQueryList.addListener(matchMediaListener);
 
     window.addEventListener('scroll', scrollFunction);
 
@@ -237,7 +245,7 @@ function App() {
         if (yBottom === 0) {
           circle.css({ WebkitMaskPosition: 'center', maskPosition: 'center' }); // reset
           // open inputs if no user data.
-          if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true }); 
+          if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true });
         }
       });
     }
@@ -307,10 +315,28 @@ function App() {
     }
   }, []);
 
+  const expandOnClick = () => {
+    setInputsPanle({ isOpen: !inputsPanle.isOpen, useAnimation: true });
+  };
+
+  const matchMediaListener = e => {
+    const inputsContainer = document.getElementById('expandContainer');
+    if (e.matches) {
+      inputsContainer.css({ left: isPanelOpen.current ? '0vw' : '-100vw' });
+      document.body.style.overflow = isPanelOpen.current ? 'hidden' : 'auto';
+    } else {
+      inputsContainer.css({ height: isPanelOpen.current ? 'auto' : '0px' });
+      document.body.style.overflow = 'auto';
+    }
+  };
+
   return (
     <Ctx.Provider value={{ data, set, inputsPanle, setInputsPanle }}>
       <div className='App'>
         <header id='header'>
+          <svg id='ham-menu' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' onClick={expandOnClick}>
+            <path d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z' />
+          </svg>
           <h1 className='header-title'>Body Measurements Calculator</h1>
         </header>
 
