@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { requestNum } from 'request-animation-number';
 import { ACTIVITY, Ctx, minMax } from './App';
 // import all css files
@@ -10,7 +10,9 @@ export default function Inputs() {
 
   const [selectedTheme, setSelectedTheme] = useState(window.localStorage.getItem('theme') || 'fledgling');
 
-  const expandHeader = useCallback(() => {
+  const popStateTrigger = useRef(true);
+
+  const expandFromTop = useCallback(() => {
     const inputsWrapper = document.querySelector('.Inputs-header');
     const inputsContainer = document.getElementById('expandContainer');
     const padding = inputsContainer.getCss('padding-top', true);
@@ -47,17 +49,25 @@ export default function Inputs() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ctx.inputsPanle]);
 
-  const expandSide = useCallback(() => {
+  const expandFromSide = useCallback(() => {
     const inputsContainer = document.getElementById('expandContainer');
-    const duration = ctx.inputsPanle.useAnimation ? 500 : 0;
+    const masks = document.querySelectorAll('.Inputs-mask');
+    const duration = ctx.inputsPanle.useAnimation ? 400 : 0;
 
     // close
     if (!ctx.inputsPanle.isOpen) {
+      popStateTrigger.current = false;
+      if (window.location.pathname === '/inputs') window.history.back();
+      popStateTrigger.current = true;
+
+      masks.removeClass('Inputs-mask-animation'); // remove mask animation
       requestNum({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, left => {
         inputsContainer.css({ left: `${left}vw` });
       });
       // open
     } else {
+      if (window.location.pathname === '/') window.history.pushState('', '', '/inputs');
+      masks.addClass('Inputs-mask-animation');
       requestNum({ from: [-100], to: [0], duration, easingFunction: 'easeOutCubic' }, left => {
         inputsContainer.css({ left: `${left}vw` });
       });
@@ -65,10 +75,19 @@ export default function Inputs() {
   }, [ctx.inputsPanle]);
 
   useEffect(() => {
-    window.innerWidth <= 800 ? expandSide() : expandHeader();
+    window.innerWidth <= 800 ? expandFromSide() : expandFromTop();
     document.body.style.overflow = window.innerWidth <= 800 && ctx.inputsPanle.isOpen ? 'hidden' : 'auto';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ctx.inputsPanle]);
+
+  useEffect(() => {
+    window.addEventListener('popstate', e => {
+      e.preventDefault();
+      if (window.location.pathname === '/' && popStateTrigger.current)
+        ctx.setInputsPanle({ isOpen: false, useAnimation: true });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const expandOnClick = () => {
     ctx.setInputsPanle({ isOpen: !ctx.inputsPanle.isOpen, useAnimation: true });
