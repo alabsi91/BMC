@@ -12,6 +12,72 @@ export default function Inputs() {
 
   const popStateTrigger = useRef(true);
 
+  const hamburgerAnimation = useCallback(async () => {
+    const hamburger = document.getElementById('ham-menu');
+    const top = hamburger.childNodes[0];
+    const middle = hamburger.childNodes[1];
+    const bottom = hamburger.childNodes[2];
+
+    if (ctx.inputsPanle.isOpen) {
+      if (!ctx.inputsPanle.useAnimation) {
+        hamburger.style.transform = 'rotate(45deg)';
+        top.style.transform = 'rotate(90deg) scaleY(0.7)';
+        top.setAttribute('y', 10.5);
+        bottom.setAttribute('y', 10.5);
+        bottom.style.transform = 'scaleY(0.7)';
+        middle.style.transform = 'scaleY(0.7)';
+        return;
+      }
+      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, (x, y) => {
+        hamburger.style.transform = `scale(${x}, ${y})`;
+      });
+      await requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 75 }, (x, y) => {
+        hamburger.style.transform = `scale(${x}, ${y})`;
+      });
+      await requestNum({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, (t, b, s) => {
+        top.setAttribute('y', t);
+        top.style.transform = `scaleY(${s})`;
+        bottom.setAttribute('y', b);
+        bottom.style.transform = `scaleY(${s})`;
+        middle.style.transform = `scaleY(${s})`;
+      });
+      await requestNum({ from: 0, to: 90, duration: 100 }, r => {
+        top.style.transform = `rotate(${r}deg) scaleY(0.7)`;
+      });
+      requestNum({ from: 0, to: 45, duration: 300, easingFunction: 'easeOutBack' }, r => {
+        hamburger.style.transform = `rotate(${r}deg)`;
+      });
+    } else {
+      if (!ctx.inputsPanle.useAnimation) {
+        hamburger.removeCss('transform');
+        top.setAttribute('y', 3);
+        bottom.setAttribute('y', 18);
+        hamburger.childNodes.removeCss('transform');
+        return;
+      }
+      // reverse
+      await requestNum({ to: 0, from: 45, duration: 300, easingFunction: 'easeInBack' }, r => {
+        hamburger.style.transform = `rotate(${r}deg)`;
+      });
+      await requestNum({ to: 0, from: 90, duration: 100, delay: 50 }, r => {
+        top.style.transform = `rotate(${r}deg) scaleY(0.7)`;
+      });
+      await requestNum({ to: [3, 18, 1], from: [10.5, 10.5, 0.7], duration: 100 }, (t, b, s) => {
+        top.setAttribute('y', t);
+        top.style.transform = `scaleY(${s})`;
+        bottom.setAttribute('y', b);
+        bottom.style.transform = `scaleY(${s})`;
+        middle.style.transform = `scaleY(${s})`;
+      });
+      await requestNum({ to: [0.9, 1.1], from: [1, 1], duration: 75 }, (x, y) => {
+        hamburger.style.transform = `scale(${x}, ${y})`;
+      });
+      requestNum({ to: [1, 1], from: [0.9, 1.1], duration: 200 }, (x, y) => {
+        hamburger.style.transform = `scale(${x}, ${y})`;
+      });
+    }
+  }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation]);
+
   const expandFromTop = useCallback(() => {
     const inputsWrapper = document.querySelector('.Inputs-header');
     const inputsContainer = document.getElementById('expandContainer');
@@ -54,15 +120,16 @@ export default function Inputs() {
     const masks = document.querySelectorAll('.Inputs-mask');
     const duration = ctx.inputsPanle.useAnimation ? 400 : 0;
 
+    hamburgerAnimation();
     // close
     if (!ctx.inputsPanle.isOpen) {
       popStateTrigger.current = false;
       if (window.location.pathname === '/inputs') window.history.back();
-      popStateTrigger.current = true;
 
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
       requestNum({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, left => {
         inputsContainer.css({ left: `${left}vw` });
+        if (left === -100) popStateTrigger.current = true;
       });
       // open
     } else {
@@ -72,7 +139,7 @@ export default function Inputs() {
         inputsContainer.css({ left: `${left}vw` });
       });
     }
-  }, [ctx.inputsPanle]);
+  }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation, hamburgerAnimation]);
 
   useEffect(() => {
     window.innerWidth <= 800 ? expandFromSide() : expandFromTop();
@@ -83,8 +150,7 @@ export default function Inputs() {
   useEffect(() => {
     window.addEventListener('popstate', e => {
       e.preventDefault();
-      if (window.location.pathname === '/' && popStateTrigger.current)
-        ctx.setInputsPanle({ isOpen: false, useAnimation: true });
+      if (window.location.pathname === '/' && popStateTrigger.current) ctx.setInputsPanle({ isOpen: false, useAnimation: true });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -186,6 +252,9 @@ export default function Inputs() {
             <BasicInput />
             <MoreInput />
             <ActivityInput />
+            <div className='Inputs-done' onClick={expandOnClick}>
+              <p>Done</p>
+            </div>
           </div>
         </div>
 

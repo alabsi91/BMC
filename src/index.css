@@ -40,10 +40,13 @@ header {
 #ham-menu {
   display: none;
   fill: var(--main-color);
-  height: 30px;
-  width: 30px;
+  height: 28px;
+  width: 28px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 20px;
+}
+#ham-menu > * {
+  transform-origin: center;
 }
 .header-title {
   display: inline-block;
@@ -227,18 +230,20 @@ header {
   border-radius: var(--border-radius);
   border-color: var(--buttons-background);
 }
-.Inputs-header-close {
+.Inputs-done {
   display: none;
-  flex-direction: row-reverse;
-  padding: 10px 0px;
-  margin: 20px 0px;
-}
-.Inputs-header-close > svg {
-  fill: var(--main-color);
-  height: 30px;
-  width: 30px;
-  margin-right: 20px;
+  background-color: var(--main-color);
+  padding: 5px;
+  margin: 10px 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
+}
+.Inputs-done > p {
+  color: var(--buttons-text-color-active);
+  font-size: var(--font-small);
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
 }
 .Inputs-mask {
   position: absolute;
@@ -426,6 +431,9 @@ input[type='number'] {
     left: 0;
     background-color: var(--header-background);
     z-index: 10;
+  }
+  .Inputs-done {
+    display: block;
   }
   .Inputs-header {
     overflow: auto;
