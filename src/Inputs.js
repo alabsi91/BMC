@@ -18,63 +18,45 @@ export default function Inputs() {
     const middle = hamburger.childNodes[1];
     const bottom = hamburger.childNodes[2];
 
+    const step_1 = (x, y) => (hamburger.style.transform = `scale(${x}, ${y})`);
+    const step_2 = (x, y) => (hamburger.style.transform = `scale(${x}, ${y})`);
+    const step_3 = (t, b, s) => {
+      top.setAttribute('y', t);
+      top.style.transform = `scaleY(${s})`;
+      bottom.setAttribute('y', b);
+      bottom.style.transform = `scaleY(${s})`;
+      middle.style.transform = `scaleY(${s})`;
+    };
+    const step_4 = r => (top.style.transform = `rotate(${r}deg) scaleY(0.7)`);
+    const step_5 = r => (hamburger.style.transform = `rotate(${r}deg)`);
+
     if (ctx.inputsPanle.isOpen) {
+      // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
-        hamburger.style.transform = 'rotate(45deg)';
-        top.style.transform = 'rotate(90deg) scaleY(0.7)';
-        top.setAttribute('y', 10.5);
-        bottom.setAttribute('y', 10.5);
-        bottom.style.transform = 'scaleY(0.7)';
-        middle.style.transform = 'scaleY(0.7)';
+        step_3(10.5, 10.5, 0.7);
+        step_4(90);
+        step_5(45);
         return;
       }
-      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, (x, y) => {
-        hamburger.style.transform = `scale(${x}, ${y})`;
-      });
-      await requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 75 }, (x, y) => {
-        hamburger.style.transform = `scale(${x}, ${y})`;
-      });
-      await requestNum({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, (t, b, s) => {
-        top.setAttribute('y', t);
-        top.style.transform = `scaleY(${s})`;
-        bottom.setAttribute('y', b);
-        bottom.style.transform = `scaleY(${s})`;
-        middle.style.transform = `scaleY(${s})`;
-      });
-      await requestNum({ from: 0, to: 90, duration: 100 }, r => {
-        top.style.transform = `rotate(${r}deg) scaleY(0.7)`;
-      });
-      requestNum({ from: 0, to: 45, duration: 300, easingFunction: 'easeOutBack' }, r => {
-        hamburger.style.transform = `rotate(${r}deg)`;
-      });
+      // animate to X shape
+      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, step_1);
+      await requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 75 }, step_2);
+      await requestNum({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_3);
+      await requestNum({ to: 90, duration: 100 }, step_4);
+      requestNum({ to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_5);
     } else {
+      // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
-        hamburger.removeCss('transform');
-        top.setAttribute('y', 3);
-        bottom.setAttribute('y', 18);
-        hamburger.childNodes.removeCss('transform');
+        step_5(0);
+        step_3(3, 18, 1);
         return;
       }
-      // reverse
-      await requestNum({ to: 0, from: 45, duration: 300, easingFunction: 'easeInBack' }, r => {
-        hamburger.style.transform = `rotate(${r}deg)`;
-      });
-      await requestNum({ to: 0, from: 90, duration: 100, delay: 50 }, r => {
-        top.style.transform = `rotate(${r}deg) scaleY(0.7)`;
-      });
-      await requestNum({ to: [3, 18, 1], from: [10.5, 10.5, 0.7], duration: 100 }, (t, b, s) => {
-        top.setAttribute('y', t);
-        top.style.transform = `scaleY(${s})`;
-        bottom.setAttribute('y', b);
-        bottom.style.transform = `scaleY(${s})`;
-        middle.style.transform = `scaleY(${s})`;
-      });
-      await requestNum({ to: [0.9, 1.1], from: [1, 1], duration: 75 }, (x, y) => {
-        hamburger.style.transform = `scale(${x}, ${y})`;
-      });
-      requestNum({ to: [1, 1], from: [0.9, 1.1], duration: 200 }, (x, y) => {
-        hamburger.style.transform = `scale(${x}, ${y})`;
-      });
+      // reverse animation
+      await requestNum({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_4);
+      await requestNum({ from: 45, to: 0, duration: 100 }, step_5);
+      await requestNum({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100 }, step_3);
+      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, step_2);
+      requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 200 }, step_1);
     }
   }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation]);
 
