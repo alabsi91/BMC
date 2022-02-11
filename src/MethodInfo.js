@@ -1,5 +1,5 @@
+import { animare } from 'animare';
 import { useCallback, useRef } from 'react';
-import { requestNum } from 'request-animation-number';
 
 export default function MethodInfo(props) {
   const infoContainer = useRef();
@@ -22,17 +22,17 @@ export default function MethodInfo(props) {
     const infoCardHeight = infoCard.children[1].clientHeight + infoCard.children[2].clientHeight + padding;
     cardHeight.current = card.clientHeight;
 
-    requestNum(
+    animare(
       {
         from: [0, x, y, card.clientHeight],
         to: [infoCardHeight + padding, card.clientWidth / 2, (infoCardHeight + padding) / 2, infoCardHeight],
         duration: 400,
         easingFunction: 'easeOutCirc',
       },
-      (c, x, y, h) => {
+      ([c, x, y, h], { isLastFrame }) => {
         card.css({ height: h + 'px' });
         infoCard.css({ clipPath: `circle(${c}px at ${x}px ${y}px)` });
-        if (h === infoCardHeight) {
+        if (isLastFrame) {
           infoCard.css({ overflow: 'overlay' });
           icons.removeCss('pointer-events');
         }
@@ -56,18 +56,18 @@ export default function MethodInfo(props) {
 
     infoCard.css({ overflow: 'hidden' });
 
-    requestNum(
+    animare(
       {
         from: [infoCardHeight, card.clientWidth / 2, card.clientHeight / 2, infoCardHeight],
         to: [0, x, y, cardHeight.current],
         duration: 500,
         easingFunction: 'easeInSine',
       },
-      (c, x, y, h) => {
+      ([c, x, y, h], { isLastFrame }) => {
         infoCard.css({ clipPath: `circle(${c}px at ${x}px ${y}px)` });
         card.css({ height: h + 'px' });
 
-        if (c === 0) {
+        if (isLastFrame) {
           infoCard.css({ display: 'none' });
           card.removeCss('height');
           infoCard.removeCss('overflow');

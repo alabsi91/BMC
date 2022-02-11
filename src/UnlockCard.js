@@ -1,5 +1,5 @@
+import { animare } from 'animare';
 import { useCallback, useContext, useLayoutEffect, useRef } from 'react';
-import { requestNum } from 'request-animation-number';
 import { Ctx, minMax } from './App';
 
 export default function UnlockCard(props) {
@@ -21,12 +21,12 @@ export default function UnlockCard(props) {
 
     const lockedHeight = locked.clientHeight;
 
-    requestNum(
+    animare(
       { from: [lockedHeight, 100], to: [cardHeight, 0], duration: skipAnimation ? 0 : 400, easingFunction: 'easeInSine' },
-      (h, p) => {
+      ([h, p], { isLastFrame }) => {
         locked.css({ clipPath: `circle(${p}%)` });
         card.css({ height: h + 'px' });
-        if (p === 0) {
+        if (isLastFrame) {
           card.removeCss('height');
           locked.css({ display: 'none' });
           locked.removeCss('clip-path');
@@ -52,12 +52,12 @@ export default function UnlockCard(props) {
     }
     const lockedHeight = childrenHeights.reduce((a, b) => a + b) + 41;
 
-    requestNum(
+    animare(
       { from: [cardHeight, 0], to: [lockedHeight, 100], duration: skipAnimation ? 0 : 300, easingFunction: 'easeInSine' },
-      (h, p) => {
+      ([h, p], { isLastFrame }) => {
         locked.css({ clipPath: `circle(${p}% at 50% 50%)` });
         card.css({ height: h + 'px' });
-        if (p === 100) locked.removeCss('clip-path');
+        if (isLastFrame) locked.removeCss('clip-path');
       }
     );
   }, []);

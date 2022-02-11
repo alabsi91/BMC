@@ -1,5 +1,5 @@
+import { animare } from 'animare';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { requestNum } from 'request-animation-number';
 import { Ctx } from '../App';
 import MethodInfo from '../MethodInfo';
 import UnlockCard from '../UnlockCard';
@@ -37,9 +37,9 @@ export default function Bmi() {
   // animate bmi results
   useEffect(() => {
     const Txt = bmiTxtEl.current;
-    requestNum(
+    animare(
       { from: prevBmi.current, to: bmi, duration: 500, easingFunction: 'easeOutSine' },
-      t => (Txt.innerHTML = +t.toFixed(1))
+      ([t]) => (Txt.innerHTML = +t.toFixed(1))
     );
     prevBmi.current = bmi;
   }, [bmi]);
@@ -80,7 +80,7 @@ export default function Bmi() {
     const context = canvas.getContext('2d');
 
     const indicator = bmi > 35 ? 99.9 : bmi < 0 ? 0 : Math.round((bmi * 100) / 35);
-    requestNum({ from: bmiArrowPos.current || 0, to: indicator || 0, duration: 500, easingFunction: 'easeOutSine' }, l => {
+    animare({ from: bmiArrowPos.current || 0, to: indicator || 0, duration: 500, easingFunction: 'easeOutSine' }, ([l]) => {
       bmiArrow.css({ left: l + '%' });
       const r = context?.getImageData((canvas.width * l) / 100, canvas.height / 2, 1, 1)?.data;
       const color = `rgb(${r[0]}, ${r[1]}, ${r[2]})`;

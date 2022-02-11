@@ -9,7 +9,7 @@ import Whtr from './cards/Whtr';
 import Tbw from './cards/Tbw';
 import Inputs from './Inputs';
 import { cardMouseMove, cardMouseEnter, cardMouseLeave } from './cardMouseMove';
-import { requestNum } from 'request-animation-number';
+import { animare } from 'animare';
 
 if ('registerProperty' in window.CSS) {
   CSS.registerProperty({
@@ -223,31 +223,20 @@ function App() {
       const card = cards[i];
       const circle = maskeElement[i];
       const { width, height } = card.getBoundingClientRect();
-      // top left to top right.
-      requestNum({ to: width, duration }, x => {
-        const maskPos = `${x - maskeSize}px ${0 - maskeSize}px`;
+
+      const cb = ([x, y]) => {
+        const maskPos = `${x - maskeSize}px ${y - maskeSize}px`;
         circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-      });
-      // top right to bottom right.
-      requestNum({ to: height, duration, delay: duration }, y => {
-        const maskPos = `${width - maskeSize}px ${y - maskeSize}px`;
-        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-      });
-      // bottom right to bottom left.
-      requestNum({ from: width, to: 0, duration, delay: duration * 2 }, xBottom => {
-        const maskPos = `${xBottom - maskeSize}px ${height - maskeSize}px`;
-        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-      });
-      // bottom left to top left.
-      requestNum({ from: height, to: 0, duration, delay: duration * 3 }, yBottom => {
-        const maskPos = `${-maskeSize}px ${yBottom - maskeSize}px`;
-        circle.css({ WebkitMaskPosition: maskPos, maskPosition: maskPos });
-        if (yBottom === 0) {
-          circle.css({ WebkitMaskPosition: 'center', maskPosition: 'center' }); // reset
-          // open inputs if no user data.
+      };
+
+      animare({ to: [width, 0], duration }, cb)
+        .to({ to: [width, height] })
+        .to({ to: [0, height] })
+        .to({ to: [0, 0] })
+        .to({ to: [width / 2, height / 2] })
+        .onFinish(() => {
           if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true });
-        }
-      });
+        });
     }
   };
 
@@ -330,15 +319,10 @@ function App() {
     }
   };
 
-
-
   return (
     <Ctx.Provider value={{ data, set, inputsPanle, setInputsPanle }}>
       <div className='App'>
         <header id='header'>
-          {/* <svg id='ham-menu' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' onClick={expandOnClick}>
-            <path d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z' />
-          </svg> */}
           <svg id='ham-menu' onClick={expandOnClick} viewBox='0 0 24 24'>
             <rect x='0' y='3' width='100%' height='3' />
             <rect x='0' y='10.5' width='100%' height='3' />
@@ -356,7 +340,7 @@ function App() {
         <div
           className='scroll-to-top'
           onClick={() => {
-            requestNum({ from: window.scrollY, to: 0, duration: 500, easingFunction: 'easeOutCubic' }, y => {
+            animare({ from: window.scrollY, to: 0, duration: 500, easingFunction: 'easeOutCubic' }, ([y]) => {
               window.scrollTo({ top: y });
             });
           }}

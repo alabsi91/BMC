@@ -1,5 +1,5 @@
+import { animare } from 'animare';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { requestNum } from 'request-animation-number';
 import { ACTIVITY, Ctx, minMax } from './App';
 // import all css files
 import themes from './themes/themeList.json';
@@ -18,45 +18,42 @@ export default function Inputs() {
     const middle = hamburger.childNodes[1];
     const bottom = hamburger.childNodes[2];
 
-    const step_1 = (x, y) => (hamburger.style.transform = `scale(${x}, ${y})`);
-    const step_2 = (x, y) => (hamburger.style.transform = `scale(${x}, ${y})`);
-    const step_3 = (t, b, s) => {
+    const step_1 = ([x, y]) => (hamburger.style.transform = `scale(${x}, ${y})`);
+    const step_2 = ([t, b, s]) => {
       top.setAttribute('y', t);
       top.style.transform = `scaleY(${s})`;
       bottom.setAttribute('y', b);
       bottom.style.transform = `scaleY(${s})`;
       middle.style.transform = `scaleY(${s})`;
     };
-    const step_4 = r => (top.style.transform = `rotate(${r}deg) scaleY(0.7)`);
-    const step_5 = r => (hamburger.style.transform = `rotate(${r}deg)`);
+    const step_3 = ([r]) => (top.style.transform = `rotate(${r}deg) scaleY(0.7)`);
+    const step_4 = ([r]) => (hamburger.style.transform = `rotate(${r}deg)`);
 
     if (ctx.inputsPanle.isOpen) {
       // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
-        step_3(10.5, 10.5, 0.7);
-        step_4(90);
-        step_5(45);
+        step_2([10.5, 10.5, 0.7]);
+        step_3([90]);
+        step_4([45]);
         return;
       }
       // animate to X shape
-      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, step_1);
-      await requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 75 }, step_2);
-      await requestNum({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_3);
-      await requestNum({ to: 90, duration: 100 }, step_4);
-      requestNum({ to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_5);
+      await animare({ from: [1, 1], to: [0.9, 1.1], duration: 150, direction: 'alternate' }, step_1).asyncOnFinish();
+      await animare({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_2).asyncOnFinish();
+      await animare({ to: 90, duration: 100 }, step_3).asyncOnFinish();
+      animare({ to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_4);
     } else {
       // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
-        step_5(0);
-        step_3(3, 18, 1);
+        step_4([0]);
+        step_2([3, 18, 1]);
         return;
       }
       // reverse animation
-      await requestNum({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_4);
-      await requestNum({ from: 45, to: 0, duration: 100 }, step_5);
-      await requestNum({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100 }, step_3);
-      await requestNum({ from: [1, 1], to: [0.9, 1.1], duration: 75 }, step_2);
-      requestNum({ from: [0.9, 1.1], to: [1, 1], duration: 200 }, step_1);
+      await animare({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_3).asyncOnFinish();
+      await animare({ from: 45, to: 0, duration: 100 }, step_4).asyncOnFinish();
+      await animare({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100 }, step_2).asyncOnFinish();
+      animare({ from: [1, 1], to: [0.9, 1.1], duration: 200, direction: 'alternate' }, step_1).asyncOnFinish();
     }
   }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation]);
 
@@ -75,7 +72,7 @@ export default function Inputs() {
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
       arrowContainer.css({ borderTopWidth: '1px' }); // hide border
 
-      requestNum({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, easingFunction: 'easeInOutQuad' }, (h, r, p) => {
+      animare({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, easingFunction: 'easeOutCubic' }, ([h, r, p]) => {
         inputsContainer.css({ height: `${h}px`, paddingTop: `${p}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
       });
@@ -85,10 +82,10 @@ export default function Inputs() {
       arrowContainer.css({ borderTopWidth: '0px' });
       inputsContainer.removeCss('padding-top');
 
-      requestNum({ from: [0, 180], to: [gridHeight, 0], duration, easingFunction: 'easeInOutQuad' }, (h, r) => {
+      animare({ from: [0, 180], to: [gridHeight, 0], duration, easingFunction: 'easeOutBounce' }, ([h, r], { isLastFrame }) => {
         inputsContainer.css({ height: `${h}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
-        if (r === 0) {
+        if (isLastFrame) {
           inputsContainer.removeCss('height');
           inputsWrapper.removeCss('position');
         }
@@ -109,7 +106,7 @@ export default function Inputs() {
       if (window.location.pathname === '/inputs') window.history.back();
 
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
-      requestNum({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, left => {
+      animare({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, ([left]) => {
         inputsContainer.css({ left: `${left}vw` });
         if (left === -100) popStateTrigger.current = true;
       });
@@ -117,7 +114,7 @@ export default function Inputs() {
     } else {
       if (window.location.pathname === '/') window.history.pushState('', '', '/inputs');
       masks.addClass('Inputs-mask-animation');
-      requestNum({ from: [-100], to: [0], duration, easingFunction: 'easeOutCubic' }, left => {
+      animare({ from: [-100], to: [0], duration, easingFunction: 'easeOutCubic' }, ([left]) => {
         inputsContainer.css({ left: `${left}vw` });
       });
     }
