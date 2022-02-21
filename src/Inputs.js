@@ -12,7 +12,7 @@ export default function Inputs() {
 
   const popStateTrigger = useRef(true);
 
-  const hamburgerAnimation = useCallback(async () => {
+  const hamburgerAnimation = useCallback(() => {
     const hamburger = document.getElementById('ham-menu');
     const top = hamburger.childNodes[0];
     const middle = hamburger.childNodes[1];
@@ -26,8 +26,8 @@ export default function Inputs() {
       bottom.style.transform = `scaleY(${s})`;
       middle.style.transform = `scaleY(${s})`;
     };
-    const step_3 = ([r]) => (top.style.transform = `rotate(${r}deg) scaleY(0.7)`);
-    const step_4 = ([r]) => (hamburger.style.transform = `rotate(${r}deg)`);
+    const step_3 = r => (top.style.transform = `rotate(${r}deg) scaleY(0.7)`);
+    const step_4 = r => (hamburger.style.transform = `rotate(${r}deg)`);
 
     if (ctx.inputsPanle.isOpen) {
       // skip animation.
@@ -38,10 +38,10 @@ export default function Inputs() {
         return;
       }
       // animate to X shape
-      await animare({ from: [1, 1], to: [0.9, 1.1], duration: 150, direction: 'alternate' }, step_1).asyncOnFinish();
-      await animare({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_2).asyncOnFinish();
-      await animare({ to: 90, duration: 100 }, step_3).asyncOnFinish();
-      animare({ to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_4);
+      animare({ from: [1, 1], to: [0.9, 1.1], duration: 150, direction: 'alternate' }, step_1)
+        .next({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_2)
+        .next({ from: 0, to: 90, duration: 100 }, step_3)
+        .next({ from: 0, to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_4);
     } else {
       // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
@@ -50,10 +50,10 @@ export default function Inputs() {
         return;
       }
       // reverse animation
-      await animare({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_3).asyncOnFinish();
-      await animare({ from: 45, to: 0, duration: 100 }, step_4).asyncOnFinish();
-      await animare({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100 }, step_2).asyncOnFinish();
-      animare({ from: [1, 1], to: [0.9, 1.1], duration: 200, direction: 'alternate' }, step_1).asyncOnFinish();
+      animare({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_3)
+        .next({ from: 45, to: 0, duration: 100, easingFunction: 'linear' }, step_4)
+        .next({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100, easingFunction: 'linear' }, step_2)
+        .next({ from: [1, 1], to: [0.9, 1.1], duration: 200, direction: 'alternate', easingFunction: 'linear' }, step_1);
     }
   }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation]);
 
@@ -106,15 +106,15 @@ export default function Inputs() {
       if (window.location.pathname === '/inputs') window.history.back();
 
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
-      animare({ from: [0], to: [-100], duration, easingFunction: 'easeInCubic' }, ([left]) => {
+      animare({ to: -100, duration, easingFunction: 'easeInCubic' }, (left, { isLastFrame }) => {
         inputsContainer.css({ left: `${left}vw` });
-        if (left === -100) popStateTrigger.current = true;
+        if (isLastFrame) popStateTrigger.current = true;
       });
       // open
     } else {
       if (window.location.pathname === '/') window.history.pushState('', '', '/inputs');
       masks.addClass('Inputs-mask-animation');
-      animare({ from: [-100], to: [0], duration, easingFunction: 'easeOutCubic' }, ([left]) => {
+      animare({ from: -100, to: 0, duration, easingFunction: 'easeOutCubic' }, left => {
         inputsContainer.css({ left: `${left}vw` });
       });
     }

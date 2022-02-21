@@ -230,10 +230,10 @@ function App() {
       };
 
       animare({ to: [width, 0], duration }, cb)
-        .to({ to: [width, height] })
-        .to({ to: [0, height] })
-        .to({ to: [0, 0] })
-        .to({ to: [width / 2, height / 2] })
+        .next({ to: [width, height] })
+        .next({ to: [0, height] })
+        .next({ to: [0, 0] })
+        .next({ to: [width / 2, height / 2] })
         .onFinish(() => {
           if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true });
         });
@@ -340,7 +340,7 @@ function App() {
         <div
           className='scroll-to-top'
           onClick={() => {
-            animare({ from: window.scrollY, to: 0, duration: 500, easingFunction: 'easeOutCubic' }, ([y]) => {
+            animare({ from: window.scrollY, to: 0, duration: 500, easingFunction: 'easeOutCubic' }, y => {
               window.scrollTo({ top: y });
             });
           }}

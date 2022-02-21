@@ -37,10 +37,9 @@ export default function Bmi() {
   // animate bmi results
   useEffect(() => {
     const Txt = bmiTxtEl.current;
-    animare(
-      { from: prevBmi.current, to: bmi, duration: 500, easingFunction: 'easeOutSine' },
-      ([t]) => (Txt.innerHTML = +t.toFixed(1))
-    );
+    animare({ from: prevBmi.current, to: bmi, duration: 500, easingFunction: 'easeOutSine' }, ([t]) => {
+      Txt.innerHTML = +t.toFixed(1);
+    });
     prevBmi.current = bmi;
   }, [bmi]);
 
