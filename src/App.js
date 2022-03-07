@@ -9,7 +9,7 @@ import Whtr from './cards/Whtr';
 import Tbw from './cards/Tbw';
 import Inputs from './Inputs';
 import { cardMouseMove, cardMouseEnter, cardMouseLeave } from './cardMouseMove';
-import { animare } from 'animare';
+import { animare, ease } from 'animare';
 
 if ('registerProperty' in window.CSS) {
   CSS.registerProperty({
@@ -235,6 +235,7 @@ function App() {
         .next({ to: [0, 0] })
         .next({ to: [width / 2, height / 2] })
         .onFinish(() => {
+          circle.css({ WebkitMaskPosition: 'center', maskPosition: 'center' });
           if (!window.localStorage.getItem('userData')) setInputsPanle({ isOpen: true, useAnimation: true });
         });
     }
@@ -340,7 +341,7 @@ function App() {
         <div
           className='scroll-to-top'
           onClick={() => {
-            animare({ from: window.scrollY, to: 0, duration: 500, easingFunction: 'easeOutCubic' }, y => {
+            animare({ from: window.scrollY, to: 0, duration: 500, ease: ease.out.cubic }, y => {
               window.scrollTo({ top: y });
             });
           }}

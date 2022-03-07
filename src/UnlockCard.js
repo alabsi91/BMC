@@ -1,4 +1,4 @@
-import { animare } from 'animare';
+import { animare, ease } from 'animare';
 import { useCallback, useContext, useLayoutEffect, useRef } from 'react';
 import { Ctx, minMax } from './App';
 
@@ -22,7 +22,7 @@ export default function UnlockCard(props) {
     const lockedHeight = locked.clientHeight;
 
     animare(
-      { from: [lockedHeight, 100], to: [cardHeight, 0], duration: skipAnimation ? 0 : 400, easingFunction: 'easeInSine' },
+      { from: [lockedHeight, 100], to: [cardHeight, 0], duration: skipAnimation ? 0 : 400, ease: ease.in.sine },
       ([h, p], { isLastFrame }) => {
         locked.css({ clipPath: `circle(${p}%)` });
         card.css({ height: h + 'px' });
@@ -53,7 +53,7 @@ export default function UnlockCard(props) {
     const lockedHeight = childrenHeights.reduce((a, b) => a + b) + 41;
 
     animare(
-      { from: [cardHeight, 0], to: [lockedHeight, 100], duration: skipAnimation ? 0 : 300, easingFunction: 'easeInSine' },
+      { from: [cardHeight, 0], to: [lockedHeight, 100], duration: skipAnimation ? 0 : 300, ease: ease.in.sine },
       ([h, p], { isLastFrame }) => {
         locked.css({ clipPath: `circle(${p}% at 50% 50%)` });
         card.css({ height: h + 'px' });

@@ -1,4 +1,4 @@
-import { animare } from 'animare';
+import { animare, ease } from 'animare';
 import { useCallback, useRef } from 'react';
 
 export default function MethodInfo(props) {
@@ -27,7 +27,7 @@ export default function MethodInfo(props) {
         from: [0, x, y, card.clientHeight],
         to: [infoCardHeight + padding, card.clientWidth / 2, (infoCardHeight + padding) / 2, infoCardHeight],
         duration: 400,
-        easingFunction: 'easeOutCirc',
+        ease: ease.out.circ,
       },
       ([c, x, y, h], { isLastFrame }) => {
         card.css({ height: h + 'px' });
@@ -61,7 +61,7 @@ export default function MethodInfo(props) {
         from: [infoCardHeight, card.clientWidth / 2, card.clientHeight / 2, infoCardHeight],
         to: [0, x, y, cardHeight.current],
         duration: 500,
-        easingFunction: 'easeInSine',
+        ease: ease.in.sine,
       },
       ([c, x, y, h], { isLastFrame }) => {
         infoCard.css({ clipPath: `circle(${c}px at ${x}px ${y}px)` });

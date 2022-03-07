@@ -1,4 +1,4 @@
-import { animare } from 'animare';
+import { animare, ease } from 'animare';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ACTIVITY, Ctx, minMax } from './App';
 // import all css files
@@ -41,7 +41,7 @@ export default function Inputs() {
       animare({ from: [1, 1], to: [0.9, 1.1], duration: 150, direction: 'alternate' }, step_1)
         .next({ from: [3, 18, 1], to: [10.5, 10.5, 0.7], duration: 100 }, step_2)
         .next({ from: 0, to: 90, duration: 100 }, step_3)
-        .next({ from: 0, to: 45, duration: 300, easingFunction: 'easeOutBack' }, step_4);
+        .next({ from: 0, to: 45, duration: 300, ease: ease.out.back }, step_4);
     } else {
       // skip animation.
       if (!ctx.inputsPanle.useAnimation) {
@@ -50,10 +50,10 @@ export default function Inputs() {
         return;
       }
       // reverse animation
-      animare({ from: 90, to: 0, duration: 150, easingFunction: 'easeInBack' }, step_3)
-        .next({ from: 45, to: 0, duration: 100, easingFunction: 'linear' }, step_4)
-        .next({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100, easingFunction: 'linear' }, step_2)
-        .next({ from: [1, 1], to: [0.9, 1.1], duration: 200, direction: 'alternate', easingFunction: 'linear' }, step_1);
+      animare({ from: 90, to: 0, duration: 150, ease: ease.in.back }, step_3)
+        .next({ from: 45, to: 0, duration: 100, ease: ease.linear }, step_4)
+        .next({ from: [10.5, 10.5, 0.7], to: [3, 18, 1], duration: 100, ease: ease.linear }, step_2)
+        .next({ from: [1, 1], to: [0.9, 1.1], duration: 200, direction: 'alternate', ease: ease.linear }, step_1);
     }
   }, [ctx.inputsPanle.isOpen, ctx.inputsPanle.useAnimation]);
 
@@ -72,7 +72,7 @@ export default function Inputs() {
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
       arrowContainer.css({ borderTopWidth: '1px' }); // hide border
 
-      animare({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, easingFunction: 'easeOutCubic' }, ([h, r, p]) => {
+      animare({ from: [gridHeight, 0, padding], to: [0, 180, 0], duration, ease: ease.out.cubic }, ([h, r, p]) => {
         inputsContainer.css({ height: `${h}px`, paddingTop: `${p}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
       });
@@ -82,7 +82,7 @@ export default function Inputs() {
       arrowContainer.css({ borderTopWidth: '0px' });
       inputsContainer.removeCss('padding-top');
 
-      animare({ from: [0, 180], to: [gridHeight, 0], duration, easingFunction: 'easeOutBounce' }, ([h, r], { isLastFrame }) => {
+      animare({ from: [0, 180], to: [gridHeight, 0], duration, ease: ease.out.bounce }, ([h, r], { isLastFrame }) => {
         inputsContainer.css({ height: `${h}px` });
         arrow.css({ transform: `rotate(${r}deg)` });
         if (isLastFrame) {
@@ -106,7 +106,7 @@ export default function Inputs() {
       if (window.location.pathname === '/inputs') window.history.back();
 
       masks.removeClass('Inputs-mask-animation'); // remove mask animation
-      animare({ to: -100, duration, easingFunction: 'easeInCubic' }, (left, { isLastFrame }) => {
+      animare({ to: -100, duration, ease: ease.in.cubic }, (left, { isLastFrame }) => {
         inputsContainer.css({ left: `${left}vw` });
         if (isLastFrame) popStateTrigger.current = true;
       });
@@ -114,7 +114,7 @@ export default function Inputs() {
     } else {
       if (window.location.pathname === '/') window.history.pushState('', '', '/inputs');
       masks.addClass('Inputs-mask-animation');
-      animare({ from: -100, to: 0, duration, easingFunction: 'easeOutCubic' }, left => {
+      animare({ from: -100, to: 0, duration, ease: ease.out.cubic }, left => {
         inputsContainer.css({ left: `${left}vw` });
       });
     }
@@ -182,26 +182,23 @@ export default function Inputs() {
     ctx.clearRect(0, 0, width, height); // clear canvas
 
     // draw rounded background
-    let radius = 100;
-    const [x, y] = [0, 0];
+    const path = new Path2D(
+      'M0 100C0 44.7715 44.7715 0 100 0H412C467.228 0 512 44.7715 512 100V412C512 467.228 467.228 512 412 512H100C44.7715 512 0 467.228 0 412V100Z'
+    );
     ctx.fillStyle = colorBg;
-    if (width < 2 * radius) radius = width / 2;
-    if (height < 2 * radius) radius = height / 2;
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + width, y, x + width, y + height, radius);
-    ctx.arcTo(x + width, y + height, x, y + height, radius);
-    ctx.arcTo(x, y + height, x, y, radius);
-    ctx.arcTo(x, y, x + width, y, radius);
-    ctx.closePath();
-    ctx.fill();
+    ctx.fill(path);
 
     // draw the text
-    ctx.font = 'bold 200px Cairo';
+    const B = new Path2D(
+      'M48.8771 135.828H79.3432V291.544C79.3432 309.372 83.8567 323.251 92.8837 333.181C102.136 342.885 114.774 347.737 130.797 347.737C147.497 347.737 160.586 342.998 170.064 333.519C179.543 323.815 184.282 309.823 184.282 291.544C184.282 274.167 179.091 260.513 168.71 250.584C158.555 240.428 145.127 235.351 128.427 235.351C114.21 235.351 101.911 239.413 91.5296 247.537V217.071C103.942 210.301 117.369 206.916 131.812 206.916C155.734 206.916 175.481 214.702 191.052 230.273C206.849 245.619 214.748 266.043 214.748 291.544C214.748 318.399 206.511 339.274 190.037 354.168C173.788 368.837 153.252 376.172 128.427 376.172C104.732 376.172 85.5492 368.499 70.8804 353.153C56.2116 337.807 48.8771 317.271 48.8771 291.544V135.828Z'
+    );
+    const M = new Path2D(
+      'M251.892 210.301H401.175C417.198 210.301 429.949 213.348 439.427 219.441C449.131 225.534 455.45 233.433 458.384 243.137C461.543 252.841 463.123 264.463 463.123 278.003V372.787H433.334V278.003C433.334 260.401 428.03 248.778 417.424 243.137C412.008 240.203 401.062 238.736 384.588 238.736H370.709V372.787H340.92V238.736H281.681V372.787H251.892V210.301Z'
+    );
+
     ctx.fillStyle = colorMain;
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-    ctx.fillText('BMC', width / 2, height / 2 + 40);
+    ctx.fill(B);
+    ctx.fill(M);
 
     // set the icon
     const base64Canvas = canvas.toDataURL();

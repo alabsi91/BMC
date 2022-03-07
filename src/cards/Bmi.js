@@ -1,4 +1,4 @@
-import { animare } from 'animare';
+import { animare, ease } from 'animare';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Ctx } from '../App';
 import MethodInfo from '../MethodInfo';
@@ -37,7 +37,7 @@ export default function Bmi() {
   // animate bmi results
   useEffect(() => {
     const Txt = bmiTxtEl.current;
-    animare({ from: prevBmi.current, to: bmi, duration: 500, easingFunction: 'easeOutSine' }, ([t]) => {
+    animare({ from: prevBmi.current, to: bmi, duration: 500, ease: ease.out.sine }, ([t]) => {
       Txt.innerHTML = +t.toFixed(1);
     });
     prevBmi.current = bmi;
@@ -79,7 +79,7 @@ export default function Bmi() {
     const context = canvas.getContext('2d');
 
     const indicator = bmi > 35 ? 99.9 : bmi < 0 ? 0 : Math.round((bmi * 100) / 35);
-    animare({ from: bmiArrowPos.current || 0, to: indicator || 0, duration: 500, easingFunction: 'easeOutSine' }, ([l]) => {
+    animare({ from: bmiArrowPos.current || 0, to: indicator || 0, duration: 500, ease: ease.out.sine }, ([l]) => {
       bmiArrow.css({ left: l + '%' });
       const r = context?.getImageData((canvas.width * l) / 100, canvas.height / 2, 1, 1)?.data;
       const color = `rgb(${r[0]}, ${r[1]}, ${r[2]})`;
